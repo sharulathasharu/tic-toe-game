@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tic-Tac-Toe</h1>
+        <div class="board" id="board">
+            <div class="cell" onclick="makeMove(this)"></div>
+            <div class="cell" onclick="makeMove(this)"></div>
+            <div class="cell" onclick="makeMove(this)"></div>
+            <div class="cell" onclick="makeMove(this)"></div>
+            <div class="cell" onclick="makeMove(this)"></div>
+            <div class="cell" onclick="makeMove(this)"></div>
+            <div class="cell" onclick="makeMove(this)"></div>
+            <div class="cell" onclick="makeMove(this)"></div>
+            <div class="cell" onclick="makeMove(this)"></div>
+        </div>
+        <p id="status"></p>
+        <button id="resetButton" onclick="resetBoard()">Reset</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+<head>
+    <style>
+        body {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif, sans-serif;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcCSdSVdWnZeB5gYqcP4JKSh7Cn_L8j58clg&usqp=CAU');
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #0d2fee4d;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+h1 {
+    color: #d0cce7;
+    margin-bottom: 20px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background-color: #3498db;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+.cell:hover {
+    background-color: #2980b9;
+}
+
+button {
+    background-color: #2b28f0ec;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 18px;
+}
+
+button:hover {
+    background-color: #0e32a8;
+}
+
+    </style>
+</head>
+<head>
+    <script>
+        let currentPlayer = 'X';
+let board = ['', '', '', '', '', '', '', '', ''];
+let gameActive = true;
+const winningCombinations = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+    [0, 4, 8], [2, 4, 6]             // Diagonals
+];
+
+const boardElement = document.getElementById('board');
+const statusElement = document.getElementById('status');
+
+function makeMove(cell) {
+    const cellIndex = Array.from(boardElement.children).indexOf(cell);
+
+    if (board[cellIndex] === '' && gameActive) {
+        board[cellIndex] = currentPlayer;
+        cell.innerText = currentPlayer;
+        cell.classList.add(currentPlayer);
+
+        if (checkWin()) {
+            statusElement.innerText = `Player ${currentPlayer} wins!`;
+            gameActive = false;
+        } else if (board.every(cell => cell !== '')) {
+            statusElement.innerText = 'It\'s a draw!';
+            gameActive = false;
+        } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            statusElement.innerText = `Player ${currentPlayer}'s turn`;
+        }
+    }
+}
+
+function checkWin() {
+    for (const combo of winningCombinations) {
+        const [a, b, c] = combo;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function resetBoard() {
+    currentPlayer = 'X';
+    board = ['', '', '', '', '', '', '', '', ''];
+    gameActive = true;
+
+    statusElement.innerText = `Player ${currentPlayer}'s turn`;
+
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+        cell.innerText = '';
+        cell.classList.remove('X', 'O');
+    });
+}
+
+resetBoard();
+
+    </script>
+</head>
